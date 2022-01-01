@@ -1,0 +1,95 @@
+---
+title: 'Pràctica 2: Neteja i anàlisi de les dades'
+author: "Autor: Stefany Chóez Bolaños i Daniel Panadero Espinosa"
+date: "Diciembre 2021"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Descripción del dataset
+
+El dataset que utilitzarem en aquesta pràctica és Titanic: Machine Learning from Disaster (https://www.kaggle.com/c/titanic ).
+
+A continuació, es descriuen les variables del dataset:
+
+**PassengerId**
+   Id del passatger.
+   
+**Name**
+   Noms dels passatgers.
+    
+**Sex**
+    Factor de genere (Masculí o Femení).
+    
+**Age**
+    Valor numèric amb l'edat de les persones al dia de l'enfosament.
+    
+**Pclass**
+    Factor de la classe dels passatgers o el tipus de servei de la tripulació.
+
+**Embarked**
+    Factor del port d'embarcament
+    
+**Ticket**
+    Valor numèric del número de ticket.
+
+**Fare**
+    Valor númeric que representa el preu del ticket.
+    
+**SibSp**
+    Nombre de germans/cònjuges a bord del Titanic
+    
+**Parch**
+    Nombre de pares/fills a bord del Titanic
+    
+**Survived**
+    Factor que representa si la persona ha sobreviscut o no.
+
+**Cabin**
+    Valor numèric del nombre de la cabina.
+    
+A partir d'aquest conjunt de dades es planteja la problemàtica de determinar quines variables influeixen més a l'hora de sobreviure en l'embarcament. A més a més, es crearà un model de classificació per permetra predir quina persona sobreviu o quina no, en funció de les seves caràcteristiques.
+
+
+## Integració i selecció de les dades d’interès a analitzar.
+
+Carreguem el fitxer de dades.
+
+```{r}
+titanic_original <- read.csv('../Dataset/train.csv',stringsAsFactors = FALSE)
+files=dim(titanic_original)[1]
+files
+```
+Veiem que tenim 891 registres que es corresponen als viatgers i tripulació del Titànic i 12 variables que els caracteritzen.
+
+Verifiquem l'estructura del joc de dades principal.
+
+```{r}
+str(titanic_original)
+```
+Passem les variables de tipus caràcter i numèric a tipus factor, ja que són classes.
+
+```{r}
+titanic_original$Survived <- as.factor(titanic_original$Survived)
+titanic_original$Pclass <- as.factor(titanic_original$Pclass)
+titanic_original$Sex <- as.factor(titanic_original$Sex)
+```
+
+
+Anem ara a treure estadístiques bàsiques.
+```{r}
+summary(titanic_original)
+```
+
+De la informació mostrada destaquem que el passatger més jove tenia 2 mesos i el més gran 80 anys. La mitjana de edat la tenien en 29,7 anys. També podem observar el que es va pagar pel bitllet. Sibsp i parch també mostren dades interessants el viatger amb qui més familiar viatjava eren 8 germans o dona i 6 fills o pare/mare.
+
+
+Eliminem les variables PassengerId i Cabin perquè no ens aporta informació rellevant per el nostre anàlisi.
+
+```{r}
+titanic <- titanic_original[, c(2:10,12)]
+```
+
+    
