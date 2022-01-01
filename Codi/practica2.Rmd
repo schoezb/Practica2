@@ -93,3 +93,88 @@ titanic <- titanic_original[, c(2:10,12)]
 ```
 
     
+## Neteja de les dades.
+
+### Les dades amb zeros o elements buits.
+Estadístiques de valors buits.
+
+```{r}
+colSums(is.na(titanic))
+colSums(titanic=="")
+```
+
+Assignem valor "Desconegut" per als valors buits de la variable "country".
+
+```{r}
+titanic$Embarked[titanic$Embarked==""] <- "NA"
+titanic$Embarked <- as.factor(titanic$Embarked)
+
+```
+
+Mostrem gràficament els valors NA:
+
+```{r}
+if (!require('VIM')) install.packages('VIM'); library('VIM')
+aggr(titanic, prop = F, numbers = T)
+```
+Podem veure que només tenim una variable amb valors NA que és la variable "Age" i es pot observar que en total son 177 valors NA.
+
+Utilitzem la funció kNN de la llibreria VIM per imputar els valors de NA de la variable "Age" i utilitzem la resta de variables per calcular els valors amb un K igual a 3.
+```{r}
+titanic<- kNN( titanic, variable="Age",dist_var=c("Survived", "Pclass", "Name", "Sex", "SibSp", "Parch", "Ticket", "Fare", "Embarked"), k=3, imp_var = FALSE)
+```
+
+Com podem observar, ja no tenim cap variable amb valors NA o buits:
+```{r}
+colSums(is.na(titanic))
+colSums(titanic=="")
+```
+
+
+
+### Identificació i tractament de valors extrems.
+
+Realitzarem gràfics de les variables de tipus numèrics.
+
+```{r}
+boxplot(titanic$SibSp,main="Nombre de germans/cònjuges a bord del Titanic")
+```
+
+Com es pot observar, la majoria tenen entre 0 i 2 germans/cònjuges. De 3 a 8 són valors outliers, però són rellevants per l'anàlisi.
+
+```{r}
+boxplot(titanic$Parch,main="Nombre de pares/fills a bord del Titanic")
+```
+
+Com es pot observar, la majoria no tenen pares o fills. De 1 a 6 són valors outliers, però són rellevants per l'anàlisi.
+
+
+```{r}
+boxplot(titanic$Fare,main="Preu del bitllet")
+```
+
+Com es pot observar, la mitjana son 32 de preu de bitllet i que de 100 a 500 tenim valors outliers.
+
+
+
+```{r}
+boxplot(titanic$Age,main="Edat dels passatgers")
+```
+
+Com es pot observar, la mitjana son 30 anys i que la majoria d'edats està entre 20 i 40 anys. Entre 60 i 80 anys tenim valors outliers.
+
+
+
+## Anàlisi de les dades.
+
+### Selecció dels grups de dades que es volen analitzar/comparar (planificació dels anàlisis a aplicar).
+
+### Comprovació de la normalitat i homogeneïtat de la variància
+
+### Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents.
+
+
+## Representació dels resultats a partir de taules i gràfiques.
+
+
+## Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?    
