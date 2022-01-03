@@ -86,10 +86,10 @@ summary(titanic_original)
 De la informació mostrada destaquem que el passatger més jove tenia 2 mesos i el més gran 80 anys. La mitjana de edat la tenien en 29,7 anys. També podem observar el que es va pagar pel bitllet. Sibsp i parch també mostren dades interessants el viatger amb qui més familiar viatjava eren 8 germans o dona i 6 fills o pare/mare.
 
 
-Eliminem les variables PassengerId i Cabin perquè no ens aporta informació rellevant per el nostre anàlisi.
+Eliminem les variables PassengerId, Name, Ticket i Cabin perquè no ens aporta informació rellevant per el nostre anàlisi.
 
 ```{r}
-titanic <- titanic_original[, c(2:10,12)]
+titanic <- titanic_original[, c(2,3,5:8,10,12)]
 ```
 
     
@@ -103,7 +103,7 @@ colSums(is.na(titanic))
 colSums(titanic=="")
 ```
 
-Assignem valor "Desconegut" per als valors buits de la variable "country".
+Assignem valor "NA" per als valors buits de la variable "Embarked".
 
 ```{r}
 titanic$Embarked[titanic$Embarked==""] <- "NA"
@@ -121,7 +121,7 @@ Podem veure que només tenim una variable amb valors NA que és la variable "Age
 
 Utilitzem la funció kNN de la llibreria VIM per imputar els valors de NA de la variable "Age" i utilitzem la resta de variables per calcular els valors amb un K igual a 3.
 ```{r}
-titanic<- kNN( titanic, variable="Age",dist_var=c("Survived", "Pclass", "Name", "Sex", "SibSp", "Parch", "Ticket", "Fare", "Embarked"), k=3, imp_var = FALSE)
+titanic<- kNN( titanic, variable="Age",dist_var=c("Survived", "Pclass", "Sex", "SibSp", "Parch", "Fare", "Embarked"), k=3, imp_var = FALSE)
 ```
 
 Com podem observar, ja no tenim cap variable amb valors NA o buits:
@@ -244,6 +244,50 @@ En tots els casos obtenim un p-valor inferior a 0,05, per tant rebutjem la hipot
 
 
 ### Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents.
+
+#### Van sobreviure més les dones que els homes?
+
+La primera prova estadistica que se aplicará consistirà en un test per a la diferència de dues proporcions per determinar si van sobreviure més les dones que els homes. Per fer-ho compararem les proporcions de les dos mostres.
+
+
+$$
+H_{0}: p_{F} < p_{M}   \\
+H_{1}: p_{F} >= p_{M} 
+$$
+
+on p és la proporció de passatgers que van sobreviure.
+
+```{r}
+xf<-sum(titanic.female$Survived==1)
+nf<-nrow(titanic.female)
+xm<-sum(titanic.male$Survived==1)
+nm<-nrow(titanic.male)
+prop.test(c(xf,xm),c(nf,nm), alternative="greater")
+```
+
+El valor p és menor que α=0.05, estem en la zona de no acceptació de la hipòtesi nul·la. Per tant, podem afirmar que les diferències de proporcions són significativament diferents amb un nivell de confiança del 95%. Podem dir que van sobreviure més dones que homes.
+
+#### Van sobreviure més els de primera classe que la resta?
+
+La segona prova estadistica que se aplicará consistirà en un test per a la diferència de dues proporcions per determinar si van sobreviure més els de primera classe que la resta. Per fer-ho compararem les proporcions de les dos mostres.
+
+
+$$
+H_{0}: p_{1ra} < p_{23ra}   \\
+H_{1}: p_{1ra} >= p_{23ra} 
+$$
+
+on p és la proporció de passatgers que van sobreviure.
+
+```{r}
+x1<-sum(titanic.class1$Survived==1)
+n1<-nrow(titanic.class1)
+x23<-sum(titanic.class2$Survived==1)+sum(titanic.class3$Survived==1)
+n23<-nrow(titanic.class2)+nrow(titanic.class3)
+prop.test(c(x1,x23),c(n1,n23), alternative="greater")
+```
+El valor p és menor que α=0.05, estem en la zona de no acceptació de la hipòtesi nul·la. Per tant, podem afirmar que les diferències de proporcions són significativament diferents amb un nivell de confiança del 95%. Podem dir que van sobreviure més els de 1a classe que la resta.
+
 
 Realitzarem les correlacions entre diferents variables numèriques. Utilitzarem el coeficient de correlació de "Spearman", ja que no tenim variables amb distribució normal.
 
