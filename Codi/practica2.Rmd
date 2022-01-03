@@ -168,13 +168,77 @@ Com es pot observar, la mitjana son 30 anys i que la majoria d'edats està entre
 ## Anàlisi de les dades.
 
 ### Selecció dels grups de dades que es volen analitzar/comparar (planificació dels anàlisis a aplicar).
+A continuació, se seleccionen els grups dins del nostre conjunt de dades que poden
+resultar interessants per a analitzar i/o comparar.
+
+```{r}
+# Agrupació per tipus de classe
+titanic.class1 <- titanic[titanic$Pclass == "1",]
+titanic.class2 <- titanic[titanic$Pclass == "2",]
+titanic.class3 <- titanic[titanic$Pclass == "3",]
+
+```
+
+
+```{r}
+# Agrupació per port d'embarcació
+titanic.Cherbourg <- titanic[titanic$Embarked == "C",]
+titanic.Queenstown <- titanic[titanic$Embarked == "Q",]
+titanic.Southampton <- titanic[titanic$Embarked == "S",]
+
+```
+
+
+```{r}
+# Agrupació per sexe
+titanic.male <- titanic[titanic$Sex== "male",]
+titanic.female <- titanic[titanic$Sex == "female",]
+```
+
+
 
 ### Comprovació de la normalitat i homogeneïtat de la variància
 
-### Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents.
+
+Per la comprovació de normalitat de les variables qunatitatives utilitzarem les proves de normalitat de Kolmogorov-Smirnov i de Shapiro-Wilk, sent aquesta ultima més robusta.
+
+```{r}
+# Tests de la variable Age
+ks.test(titanic$Age, pnorm, mean(titanic$Age),sd(titanic$Age))
+shapiro.test(titanic$Age)
+
+# Tests de la variable SibSp
+ks.test(titanic$SibSp, pnorm, mean(titanic$SibSp),sd(titanic$SibSp))
+shapiro.test(titanic$SibSp)
+
+# Tests de la variable Parch
+ks.test(titanic$Parch, pnorm, mean(titanic$Parch),sd(titanic$Parch))
+shapiro.test(titanic$Parch)
+
+# Tests de la variable Fare
+ks.test(titanic$Fare, pnorm, mean(titanic$Fare),sd(titanic$Fare))
+shapiro.test(titanic$Fare)
+
+```
+
+Mirem si el p-valor és més gran que el nivell de signifiació α = 0.05. Si és més gran, aceptem la hipotesi nul·la de normalitat i si és més petit la rebutjem i podriem dir que no hi ha normalitat.
+
+En el nostre cas tots els tests ens han donat inferiors al nivell de signifiació, per tant rebutjem la hipotesis nul·la i afirmem que les variables quantitatives no són normals, amb un nivell de confiança del 95%.
+
+A continuació realitzerem el test de Fligner-Killeen per comprovar la homogeneïtat de la variància.
+
+```{r}
+# Test de la variable Age
+fligner.test(Fare ~ Sex, data = titanic)
+
+# Test de la variable Age
+fligner.test(Fare ~ Pclass, data = titanic)
+
+# Test de la variable Age
+fligner.test(Fare ~ Embarked, data = titanic)
 
 
-## Representació dels resultats a partir de taules i gràfiques.
+```
 
+En tots els casos obtenim un p-valor inferior a 0,05, per tant rebutjem la hipotesis nul·la i podem dir que les mostres no son homogenas, amb un 95% de confiança.
 
-## Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?    
