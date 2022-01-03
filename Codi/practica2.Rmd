@@ -242,3 +242,41 @@ fligner.test(Fare ~ Embarked, data = titanic)
 
 En tots els casos obtenim un p-valor inferior a 0,05, per tant rebutjem la hipotesis nul·la i podem dir que les mostres no son homogenas, amb un 95% de confiança.
 
+
+### Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents.
+
+Realitzarem les correlacions entre diferents variables numèriques. Utilitzarem el coeficient de correlació de "Spearman", ja que no tenim variables amb distribució normal.
+
+
+
+```{r}
+if (!require('tidyverse')) install.packages('tidyverse'); library('tidyverse')
+
+# Correlació entre l'edat i el preu del bitllet.
+
+cor.test(x = titanic$Age, y = titanic$Fare, method = "spearman")
+
+# Correlació entre l'edat i la variable SibSp (germans/conjuges).
+
+cor.test(x = titanic$SibSp, y = titanic$Age, method = "spearman")
+
+# Correlació entre l'edat i la variable Parch (pares/fills).
+
+cor.test(x = titanic$Parch, y = titanic$Age, method = "spearman")
+
+# Correlació el preu del bitllet i la variable Parch (pares/fills).
+
+cor.test(x = titanic$Parch, y = titanic$Fare, method = "spearman")
+
+# Correlació el preu del bitllet i la variable SibSp (pares/fills).
+
+cor.test(x = titanic$SibSp, y = titanic$Fare, method = "spearman")
+```
+
+En tots els casos el p-valor és significatiu. Entre l'edat i preu del bitllet hem obtingut 0,1 per tant podriem dir que no hi ha correlació. L'edat i les 2 variables de families, hem obtingut 0,21 i 0,27 el qual no indicaria correlació. Per acabar, entre el bitllet i les 2 variables de families, hem obtingut una correlació positiva de 0,41 i 0,45, el qual podria indicar una correlació baixa.
+
+
+
+
+
+
