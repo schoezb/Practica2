@@ -319,7 +319,52 @@ cor.test(x = titanic$SibSp, y = titanic$Fare, method = "spearman")
 
 En tots els casos el p-valor és significatiu. Entre l'edat i preu del bitllet hem obtingut 0,1 per tant podriem dir que no hi ha correlació. L'edat i les 2 variables de families, hem obtingut 0,21 i 0,27 el qual no indicaria correlació. Per acabar, entre el bitllet i les 2 variables de families, hem obtingut una correlació positiva de 0,41 i 0,45, el qual podria indicar una correlació baixa.
 
+#### Models classificadors
 
+A continuació es crearan diferents models per resoldre el problema de classificació. Provarem un model bayesià, un random forest i SVM (maquina de vectors de suport).
+
+```{r}
+if (!require('caret')) install.packages('caret'); library('caret')
+if (!require('rminer')) install.packages('rminer'); library('rminer')
+if (!require('naivebayes')) install.packages('naivebayes'); library('naivebayes')
+if (!require('LiblineaR')) install.packages('LiblineaR'); library('LiblineaR')
+if (!require('pROC')) install.packages('pROC'); library('pROC')
+# Model Naive Bayes
+set.seed(4)
+h1<-holdout(titanic$Survived,ratio=7/10,mode="stratified")
+titanic_train1<-titanic[h1$tr,]
+titanic_test1<-titanic[h1$ts,]
+train_control1<- trainControl(method="cv", number=4)
+modBayes<-train(Survived~., data=titanic_train1, method="naive_bayes", trControl = train_control1)
+predBayes1 <- predict(modBayes, newdata=titanic_test1)
+predBayes2 <- predict(modBayes, newdata=titanic_test1,type = "prob")
+confusionMatrix(predBayes1,titanic_test1$Survived,positive="1")
+```
+
+```{r}
+# Model Random Forest
+set.seed(7)
+h2<-holdout(titanic$Survived,ratio=7/10,mode="stratified")
+titanic_train2<-titanic[h2$tr,]
+titanic_test2<-titanic[h2$ts,]
+train_control2<- trainControl(method="cv", number=4)
+modForest<-train(Survived~., data=titanic_train2, method="rf", trControl = train_control2)
+predForest1 <- predict(modForest, newdata=titanic_test2)
+predForest2 <- predict(modForest, newdata=titanic_test2, type = "prob")
+confusionMatrix(predForest1,titanic_test2$Survived,positive="1")
+```
+
+```{r}
+# Model Màquines de suport vectorial
+set.seed(8)
+h<-holdout(titanic$Survived,ratio=7/10,mode="stratified")
+titanic_train<-titanic[h$tr,]
+titanic_test<-titanic[h$ts,]
+train_control<- trainControl(method="cv", number=4)
+modSVM<-train(Survived~., data=titanic_train, method="svmLinearWeights2", trControl = train_control)
+predSVM1 <- predict(modSVM, newdata=titanic_test)
+confusionMatrix(predSVM1,titanic_test$Survived,positive="1")
+```
 
 
 
