@@ -1,11 +1,12 @@
 ---
 title: 'Pràctica 2: Neteja i anàlisi de les dades'
-author: "Autor: Stefany Chóez Bolaños i Daniel Panadero Espinosa"
-date: "Diciembre 2021"
+author: 'Autor: Stefany Chóez Bolaños i Daniel Panadero Espinosa'
+date: "Decembre 2021"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(eval=T, echo=T)
 ```
 
 ## Descripción del dataset
@@ -121,7 +122,8 @@ Podem veure que només tenim una variable amb valors NA que és la variable "Age
 
 Utilitzem la funció kNN de la llibreria VIM per imputar els valors de NA de la variable "Age" i utilitzem la resta de variables per calcular els valors amb un K igual a 3.
 ```{r}
-titanic<- kNN( titanic, variable="Age",dist_var=c("Survived", "Pclass", "Sex", "SibSp", "Parch", "Fare", "Embarked"), k=3, imp_var = FALSE)
+titanic<- kNN( titanic, variable="Age",dist_var=c("Survived", "Pclass", "Sex", "SibSp", "Parch", 
+                                                  "Fare", "Embarked"), k=3, imp_var = FALSE)
 ```
 
 Com podem observar, ja no tenim cap variable amb valors NA o buits:
@@ -200,7 +202,7 @@ titanic.female <- titanic[titanic$Sex == "female",]
 ### Comprovació de la normalitat i homogeneïtat de la variància
 
 
-Per la comprovació de normalitat de les variables qunatitatives utilitzarem les proves de normalitat de Kolmogorov-Smirnov i de Shapiro-Wilk, sent aquesta última més robusta.
+Per la comprovació de normalitat de les variables quantitatives utilitzarem les proves de normalitat de Kolmogorov-Smirnov i de Shapiro-Wilk, sent aquesta última més robusta.
 
 ```{r}
 # Tests de la variable Age
@@ -221,20 +223,20 @@ shapiro.test(titanic$Fare)
 
 ```
 
-Mirem si el p-valor és més gran que el nivell de significació α = 0.05. Si és més gran, acceptem la hipòtesi nul·la de normalitat i si és més petit, la rebutgem i podríem dir que no hi ha normalitat.
+Mirem si el p-valor és més gran que el nivell de significació alfa = 0.05. Si és més gran, acceptem la hipòtesi nul·la de normalitat i si és més petit, la rebutgem i podríem dir que no hi ha normalitat.
 
 En el nostre cas tots els tests ens han donat inferiors al nivell de significació, per tant, rebutgem la hipòtesi nul·la i afirmem que les variables quantitatives no són normals, amb un nivell de confiança del 95%.
 
 A continuació realitzarem el test de Fligner-Killeen per comprovar l'homogeneïtat de la variància.
 
 ```{r}
-# Test de la variable Age
+# Test de la variable Fare - Sex
 fligner.test(Fare ~ Sex, data = titanic)
 
-# Test de la variable Age
+# Test de la variable Fare - Pclass
 fligner.test(Fare ~ Pclass, data = titanic)
 
-# Test de la variable Age
+# Test de la variable Fare - Embarked
 fligner.test(Fare ~ Embarked, data = titanic)
 
 
@@ -249,11 +251,11 @@ En tots els casos obtenim un p-valor inferior a 0,05, per tant, rebutgem la hip�
 
 La primera prova estadística que s'aplicarà consistirà en un test per a la diferència de dues proporcions per determinar si van sobreviure més les dones que els homes. Per fer-ho compararem les proporcions de les dues mostres.
 
-
 $$
-H_{0}: p_{F} < p_{M}   \\
+H_{0}: p_{F} < p_{M}\\ 
 H_{1}: p_{F} >= p_{M} 
 $$
+
 
 On p és la proporció de passatgers que van sobreviure.
 
@@ -265,7 +267,7 @@ nm<-nrow(titanic.male)
 prop.test(c(xf,xm),c(nf,nm), alternative="greater")
 ```
 
-El valor p és menor que α=0.05, estem en la zona de no acceptació de la hipòtesi nul·la. Per tant, podem afirmar que les diferències de proporcions són significativament diferents amb un nivell de confiança del 95%. Podem dir que van sobreviure més dones que homes.
+El valor p és menor que alfa=0.05, estem en la zona de no acceptació de la hipòtesi nul·la. Per tant, podem afirmar que les diferències de proporcions són significativament diferents amb un nivell de confiança del 95%. Podem dir que van sobreviure més dones que homes.
 
 #### Van sobreviure més els de primera classe que la resta?
 
@@ -273,9 +275,10 @@ La segona prova estadística que s'aplicarà consistirà en un test per a la dif
 
 
 $$
-H_{0}: p_{1ra} < p_{23ra}   \\
+H_{0}: p_{1ra} < p_{23ra}\\
 H_{1}: p_{1ra} >= p_{23ra} 
 $$
+
 
 On p és la proporció de passatgers que van sobreviure.
 
@@ -286,7 +289,7 @@ x23<-sum(titanic.class2$Survived==1)+sum(titanic.class3$Survived==1)
 n23<-nrow(titanic.class2)+nrow(titanic.class3)
 prop.test(c(x1,x23),c(n1,n23), alternative="greater")
 ```
-El valor p és menor que α=0.05, estem en la zona de no acceptació de la hipòtesi nul·la. Per tant, podem afirmar que les diferències de proporcions són significativament diferents amb un nivell de confiança del 95%. Podem dir que van sobreviure més els de 1a classe que la resta.
+El valor p és menor que alfa=0.05, estem en la zona de no acceptació de la hipòtesi nul·la. Per tant, podem afirmar que les diferències de proporcions són significativament diferents amb un nivell de confiança del 95%. Podem dir que van sobreviure més els de 1a classe que la resta.
 
 
 Realitzarem les correlacions entre diferents variables numèriques. Utilitzarem el coeficient de correlació de "Spearman", ja que no tenim variables amb distribució normal.
@@ -402,13 +405,16 @@ També farem els gràfics de la resta de variables, utilitzant gràfics de barre
 ```{r}
 par(mfrow=c(2,2))
 #Classes
-barplot(table(titanic[,c(1,2)]), main = "Supervivientes per classes", xlab = "Clase",col = c("red4","aquamarine"))
+barplot(table(titanic[,c(1,2)]), main = "Supervivientes per classes", xlab = "Clase",
+        col = c("red4","aquamarine"))
 legend("topleft", c("No sobreviu","Supervivient"), fill = c("red4","aquamarine"))
 #Sexe
-barplot(table(titanic[,c(1,3)]), main = "Supervivientes per sexe", xlab = "Sexe",col = c("red4","aquamarine"))
+barplot(table(titanic[,c(1,3)]), main = "Supervivientes per sexe", xlab = "Sexe",
+        col = c("red4","aquamarine"))
 legend("topleft", c("No sobreviu","Supervivient"), fill = c("red4","aquamarine"))
 #Embarked
-barplot(table(titanic[,c(1,8)]), main = "Supervivientes per port embaració", xlab = "Lloc embarcació",col = c("red4","aquamarine"))
+barplot(table(titanic[,c(1,8)]), main = "Supervivientes per port embaració", 
+        xlab = "Lloc embarcació",col = c("red4","aquamarine"))
 legend("topleft", c("No sobreviu","Supervivient"), fill = c("red4","aquamarine"))
 ```
 
@@ -419,7 +425,8 @@ legend("topleft", c("No sobreviu","Supervivient"), fill = c("red4","aquamarine")
 A continuació farem el gràfic de correlació entre el preu del bitllet i l'edat del passatger.
 
 ```{r}
-ggplot(data = titanic, aes(x = Age, y = log(Fare))) + geom_point(color = "gray30") + geom_smooth(color = "firebrick") + theme_bw() +ggtitle("Correlació entre preu del bitllet i edat")
+ggplot(data = titanic, aes(x = Age, y = log(Fare))) + geom_point(color = "gray30") + 
+  geom_smooth(color = "firebrick") + theme_bw() +ggtitle("Correlació entre preu del bitllet i edat")
 ```
 Podem veure que no hi ha correlació entre el preu del bitllet i l'edat.
 
@@ -470,3 +477,18 @@ Primer hem fet una anàlisi de les dades, imputació, selecció de les variables
 Un cop teníem les dades "netes", hem pogut comprovar que les dones teníem més possibilitats de sobreviure que els homes. També si eres de primera classe. El preu del bitllet no estava relacionat amb l'edat.
 
 Finalment, hem creat 3 models que amb les característiques del passatger pot dir si sobreviurà o no. Destacar que amb menys de 1000 observacions, hem pogut obtenir nivells de "accuracy" elevats, el qual el millor ha estat el de SVM (màquina de vectors de suport).
+
+
+## Dataset Final
+
+```{r}
+write.csv(titanic,"../Dataset/Titanic_Final.csv", row.names = F)
+```
+
+
+Per últim la taula de contribucions del treball.
+
+![](../Pdf/Firmes.jpg){}
+
+
+
