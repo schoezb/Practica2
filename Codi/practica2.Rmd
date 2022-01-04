@@ -21,10 +21,10 @@ A continuació, es descriuen les variables del dataset:
    Noms dels passatgers.
     
 **Sex**
-    Factor de genere (Masculí o Femení).
+    Factor de gènere (Masculí o Femení).
     
 **Age**
-    Valor numèric amb l'edat de les persones al dia de l'enfosament.
+    Valor numèric amb l'edat de les persones al dia de l'enfonsament.
     
 **Pclass**
     Factor de la classe dels passatgers o el tipus de servei de la tripulació.
@@ -33,10 +33,10 @@ A continuació, es descriuen les variables del dataset:
     Factor del port d'embarcament
     
 **Ticket**
-    Valor numèric del número de ticket.
+    Valor numèric del número de tiquet.
 
 **Fare**
-    Valor númeric que representa el preu del ticket.
+    Valor numèric que representa el preu del tiquet.
     
 **SibSp**
     Nombre de germans/cònjuges a bord del Titanic
@@ -50,7 +50,7 @@ A continuació, es descriuen les variables del dataset:
 **Cabin**
     Valor numèric del nombre de la cabina.
     
-A partir d'aquest conjunt de dades es planteja la problemàtica de determinar quines variables influeixen més a l'hora de sobreviure en l'embarcament. A més a més, es crearà un model de classificació per permetra predir quina persona sobreviu o quina no, en funció de les seves caràcteristiques.
+A partir d'aquest conjunt de dades es planteja la problemàtica de determinar quines variables influeixen més a l'hora de sobreviure en l'embarcament. A més a més, es crearà un model de classificació per permetre predir quina persona sobreviu o quina no, en funció de les seves característiques.
 
 
 ## Integració i selecció de les dades d’interès a analitzar.
@@ -83,10 +83,10 @@ Anem ara a treure estadístiques bàsiques.
 summary(titanic_original)
 ```
 
-De la informació mostrada destaquem que el passatger més jove tenia 2 mesos i el més gran 80 anys. La mitjana de edat la tenien en 29,7 anys. També podem observar el que es va pagar pel bitllet. Sibsp i parch també mostren dades interessants el viatger amb qui més familiar viatjava eren 8 germans o dona i 6 fills o pare/mare.
+De la informació mostrada destaquem que el passatger més jove tenia 2 mesos i el més gran 80 anys. La mitjana d'edat la tenien en 29,7 anys. També podem observar el que es va pagar pel bitllet. Sibsp i parch també mostren dades interessants el viatger amb qui més familiar viatjava eren 8 germans o dona i 6 fills o pare/mare.
 
 
-Eliminem les variables PassengerId, Name, Ticket i Cabin perquè no ens aporta informació rellevant per el nostre anàlisi.
+Eliminem les variables PassengerId, Name, Ticket i Cabin perquè no ens aporta informació rellevant per la nostra anàlisi.
 
 ```{r}
 titanic <- titanic_original[, c(2,3,5:8,10,12)]
@@ -117,7 +117,7 @@ Mostrem gràficament els valors NA:
 if (!require('VIM')) install.packages('VIM'); library('VIM')
 aggr(titanic, prop = F, numbers = T)
 ```
-Podem veure que només tenim una variable amb valors NA que és la variable "Age" i es pot observar que en total son 177 valors NA.
+Podem veure que només tenim una variable amb valors NA que és la variable "Age" i es pot observar que en total són 177 valors NA.
 
 Utilitzem la funció kNN de la llibreria VIM per imputar els valors de NA de la variable "Age" i utilitzem la resta de variables per calcular els valors amb un K igual a 3.
 ```{r}
@@ -200,7 +200,7 @@ titanic.female <- titanic[titanic$Sex == "female",]
 ### Comprovació de la normalitat i homogeneïtat de la variància
 
 
-Per la comprovació de normalitat de les variables qunatitatives utilitzarem les proves de normalitat de Kolmogorov-Smirnov i de Shapiro-Wilk, sent aquesta ultima més robusta.
+Per la comprovació de normalitat de les variables qunatitatives utilitzarem les proves de normalitat de Kolmogorov-Smirnov i de Shapiro-Wilk, sent aquesta última més robusta.
 
 ```{r}
 # Tests de la variable Age
@@ -221,11 +221,11 @@ shapiro.test(titanic$Fare)
 
 ```
 
-Mirem si el p-valor és més gran que el nivell de signifiació α = 0.05. Si és més gran, aceptem la hipotesi nul·la de normalitat i si és més petit la rebutjem i podriem dir que no hi ha normalitat.
+Mirem si el p-valor és més gran que el nivell de significació α = 0.05. Si és més gran, acceptem la hipòtesi nul·la de normalitat i si és més petit, la rebutgem i podríem dir que no hi ha normalitat.
 
-En el nostre cas tots els tests ens han donat inferiors al nivell de signifiació, per tant rebutjem la hipotesis nul·la i afirmem que les variables quantitatives no són normals, amb un nivell de confiança del 95%.
+En el nostre cas tots els tests ens han donat inferiors al nivell de significació, per tant, rebutgem la hipòtesi nul·la i afirmem que les variables quantitatives no són normals, amb un nivell de confiança del 95%.
 
-A continuació realitzerem el test de Fligner-Killeen per comprovar la homogeneïtat de la variància.
+A continuació realitzarem el test de Fligner-Killeen per comprovar l'homogeneïtat de la variància.
 
 ```{r}
 # Test de la variable Age
@@ -240,14 +240,14 @@ fligner.test(Fare ~ Embarked, data = titanic)
 
 ```
 
-En tots els casos obtenim un p-valor inferior a 0,05, per tant rebutjem la hipotesis nul·la i podem dir que les mostres no son homogenas, amb un 95% de confiança.
+En tots els casos obtenim un p-valor inferior a 0,05, per tant, rebutgem la hipòtesi nul·la i podem dir que les mostres no són homogènies, amb un 95% de confiança.
 
 
 ### Aplicació de proves estadístiques per comparar els grups de dades. En funció de les dades i de l’objectiu de l’estudi, aplicar proves de contrast d’hipòtesis, correlacions, regressions, etc. Aplicar almenys tres mètodes d’anàlisi diferents.
 
 #### Van sobreviure més les dones que els homes?
 
-La primera prova estadistica que se aplicará consistirà en un test per a la diferència de dues proporcions per determinar si van sobreviure més les dones que els homes. Per fer-ho compararem les proporcions de les dos mostres.
+La primera prova estadística que s'aplicarà consistirà en un test per a la diferència de dues proporcions per determinar si van sobreviure més les dones que els homes. Per fer-ho compararem les proporcions de les dues mostres.
 
 
 $$
@@ -255,7 +255,7 @@ H_{0}: p_{F} < p_{M}   \\
 H_{1}: p_{F} >= p_{M} 
 $$
 
-on p és la proporció de passatgers que van sobreviure.
+On p és la proporció de passatgers que van sobreviure.
 
 ```{r}
 xf<-sum(titanic.female$Survived==1)
@@ -269,7 +269,7 @@ El valor p és menor que α=0.05, estem en la zona de no acceptació de la hipò
 
 #### Van sobreviure més els de primera classe que la resta?
 
-La segona prova estadistica que se aplicará consistirà en un test per a la diferència de dues proporcions per determinar si van sobreviure més els de primera classe que la resta. Per fer-ho compararem les proporcions de les dos mostres.
+La segona prova estadística que s'aplicarà consistirà en un test per a la diferència de dues proporcions per determinar si van sobreviure més els de primera classe que la resta. Per fer-ho compararem les proporcions de les dues mostres.
 
 
 $$
@@ -277,7 +277,7 @@ H_{0}: p_{1ra} < p_{23ra}   \\
 H_{1}: p_{1ra} >= p_{23ra} 
 $$
 
-on p és la proporció de passatgers que van sobreviure.
+On p és la proporció de passatgers que van sobreviure.
 
 ```{r}
 x1<-sum(titanic.class1$Survived==1)
@@ -317,11 +317,11 @@ cor.test(x = titanic$Parch, y = titanic$Fare, method = "spearman")
 cor.test(x = titanic$SibSp, y = titanic$Fare, method = "spearman")
 ```
 
-En tots els casos el p-valor és significatiu. Entre l'edat i preu del bitllet hem obtingut 0,1 per tant podriem dir que no hi ha correlació. L'edat i les 2 variables de families, hem obtingut 0,21 i 0,27 el qual no indicaria correlació. Per acabar, entre el bitllet i les 2 variables de families, hem obtingut una correlació positiva de 0,41 i 0,45, el qual podria indicar una correlació baixa.
+En tots els casos el p-valor és significatiu. Entre l'edat i preu del bitllet hem obtingut 0,1, per tant, podríem dir que no hi ha correlació. L'edat i les 2 variables de famílies, hem obtingut 0,21 i 0,27 el qual no indicaria correlació. Per acabar, entre el bitllet i les 2 variables de famílies, hem obtingut una correlació positiva de 0,41 i 0,45, el qual podria indicar una correlació baixa.
 
 #### Models classificadors
 
-A continuació es crearan diferents models per resoldre el problema de classificació. Provarem un model bayesià, un random forest i SVM (maquina de vectors de suport).
+A continuació es crearan diferents models per resoldre el problema de classificació. Provarem un model bayesià, un random forest i SVM (màquina de vectors de suport).
 
 ```{r}
 if (!require('caret')) install.packages('caret'); library('caret')
@@ -367,5 +367,100 @@ confusionMatrix(predSVM1,titanic_test$Survived,positive="1")
 ```
 
 
+## Representació dels resultats a partir de taules i gràfiques.
+
+A continuació es mostraran els histogrames i els gràfics Q-Q (quantils teòrics), per comprovar la normalitat gràficament.
+
+
+```{r}
+par(mfrow=c(2,2))
+# Histograma Age
+hist(titanic$Age, col = "turquoise", breaks = 20, main = "Histograma Edat")
+# Histograma Fare
+hist(titanic$Fare, col = "turquoise", breaks= 50, xlim = c(0,150), main = "Histograma Preu Bitllet")
+# Histograma SibSp
+hist(titanic$SibSp, col = "turquoise", breaks = 15, main = "Histograma Germans/Cònjuges")
+# Histograma Parch
+hist(titanic$Parch, col = "turquoise", breaks = 15, main = "Histograma Pares/Fills")
+
+# Gràfic Q-Q Age
+qqnorm(titanic$Age, main="Q-Q Edat", col = 5)
+qqline(titanic$Age,col="orange")
+# Gràfic Q-Q Fare
+qqnorm(titanic$Fare, main="Q-Q Preu Bitllet", col = 5)
+qqline(titanic$Fare,col="orange")
+# Gràfic Q-Q SibSp
+qqnorm(titanic$SibSp, main="Q-Q Germans/Cònjuges", col = 5)
+qqline(titanic$SibSp,col="orange")
+# Gràfic Q-Q Parch
+qqnorm(titanic$Parch, main="Q-Q Pares/Fills", col = 5)
+qqline(titanic$Parch,col="orange")
+```
+
+També farem els gràfics de la resta de variables, utilitzant gràfics de barres. Cada variable es compara amb la variable objectiu de si sobreviu o no.
+
+```{r}
+par(mfrow=c(2,2))
+#Classes
+barplot(table(titanic[,c(1,2)]), main = "Supervivientes per classes", xlab = "Clase",col = c("red4","aquamarine"))
+legend("topleft", c("No sobreviu","Supervivient"), fill = c("red4","aquamarine"))
+#Sexe
+barplot(table(titanic[,c(1,3)]), main = "Supervivientes per sexe", xlab = "Sexe",col = c("red4","aquamarine"))
+legend("topleft", c("No sobreviu","Supervivient"), fill = c("red4","aquamarine"))
+#Embarked
+barplot(table(titanic[,c(1,8)]), main = "Supervivientes per port embaració", xlab = "Lloc embarcació",col = c("red4","aquamarine"))
+legend("topleft", c("No sobreviu","Supervivient"), fill = c("red4","aquamarine"))
+```
+
+
+
+### Correlacions
+
+A continuació farem el gràfic de correlació entre el preu del bitllet i l'edat del passatger.
+
+```{r}
+ggplot(data = titanic, aes(x = Age, y = log(Fare))) + geom_point(color = "gray30") + geom_smooth(color = "firebrick") + theme_bw() +ggtitle("Correlació entre preu del bitllet i edat")
+```
+Podem veure que no hi ha correlació entre el preu del bitllet i l'edat.
+
+A continuació mostrarem les correlacions de les variables numèriques amb gràfics.
+
+```{r}
+if (!require('corrplot')) install.packages('corrplot'); library('corrplot')
+corr.res<-cor(titanic[c('Age','SibSp','Parch','Fare')])
+corrplot.mixed(corr.res,upper="circle",number.cex=.7,tl.cex=.8)
+```
+
+### Accuracy Models
+
+A continuació mostrarem les accuracy dels models en gràfic de barres.
+
+```{r}
+par(mfrow=c(1,1))
+bayes<- c(75.37)
+random<-c(85.07)
+SVM<-c(85.82)
+df <- data.frame(bayes,random,SVM)
+names(df) <- c('Naive Bayes','Random Forest','SVM')
+plot<-barplot(as.matrix(df), col = 'turquoise', main = "Accuracy")
+
+```
+
+El millor model que hem obtingut ha estat el de SVM, amb un accuracy del 85,82%.
+
+### Curves ROC
+
+A continuació mostrarem les corbes ROC del model bayesià i Random Forest.
+
+```{r}
+par(mfrow=c(2,2))
+# Corba ROC Bayesià:
+plot.roc(titanic_test1$Survived , predBayes2$"1", )
+title("ROC Model Bayesià")
+
+# Corba ROC Random Forest:
+plot.roc(titanic_test2$Survived , predForest2$"1")
+title("ROC Random Forest")
+```
 
 
