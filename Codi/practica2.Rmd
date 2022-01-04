@@ -463,4 +463,10 @@ plot.roc(titanic_test2$Survived , predForest2$"1")
 title("ROC Random Forest")
 ```
 
+## Resolució del problema. A partir dels resultats obtinguts, quines són les conclusions? Els resultats permeten respondre al problema?
 
+Primer hem fet una anàlisi de les dades, imputació, selecció de les variables més importants i detecció d'outliers.
+
+Un cop teníem les dades "netes", hem pogut comprovar que les dones teníem més possibilitats de sobreviure que els homes. També si eres de primera classe. El preu del bitllet no estava relacionat amb l'edat.
+
+Finalment, hem creat 3 models que amb les característiques del passatger pot dir si sobreviurà o no. Destacar que amb menys de 1000 observacions, hem pogut obtenir nivells de "accuracy" elevats, el qual el millor ha estat el de SVM (màquina de vectors de suport).
